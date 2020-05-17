@@ -1,9 +1,12 @@
 package com.view.Primature.GMinistère;
 
+import com.Controleur.GestionFonds_controleur;
 import com.Controleur.GestionMinisteres_controleur;
+import com.Model.GestionFonds;
 import com.Model.Ministeres;
 import com.view.Primature.Listener.Listener;
 import com.view.Primature.PrimatureUI;
+import com.view.User.LoginUI;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -54,6 +57,7 @@ public class PrintMinistereUI extends JInternalFrame  {
         GridBagConstraints c = new GridBagConstraints();
         tfSrecherche = new JTextField();
         tfSrecherche.setText("Recherche");
+        tfSrecherche.setEditable( LoginUI.search );
         tfSrecherche.setFont(new Font("Arial", 2, 14)); 
         tfSrecherche.setForeground(new Color(153, 153, 153));
         tfSrecherche.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -110,6 +114,7 @@ public class PrintMinistereUI extends JInternalFrame  {
                         JMenuItem supprimerLine = new JMenuItem("Supprimer");
                         supprimerLine.setIcon( new ImageIcon("icons/cancelform.png") );
                         supprimerLine.setForeground( new Color( 201, 15, 15 ) );
+                        supprimerLine.setEnabled( LoginUI.delete );
                         supprimerLine.addActionListener( new ActionListener() {
                             @Override
                             public void actionPerformed(ActionEvent e) { 
@@ -117,13 +122,15 @@ public class PrintMinistereUI extends JInternalFrame  {
                                 int row = tableListe.getSelectedRow(); 
                                 if( controleur.delete((String)tableListe.getValueAt(row, 0))) {
                                     Listener listener = new Listener();
-                                    listener.supprimer( e );    
-                                }
+                                    listener.supprimer( e );
+                                    refreshList();
+                                } else listener.deleteError(e, "ministere");
                             }
                         });
                         menu.add( supprimerLine );
                         JMenuItem modifierLine = new JMenuItem("Modifier");
                         modifierLine.setIcon( new ImageIcon("icons/sort_by_modified_date.png") );
+                        modifierLine.setEnabled( LoginUI.modify );
                         modifierLine.addActionListener( new ActionListener() {
                             @Override
                             public void actionPerformed(ActionEvent e) { remplissageChamp(); }
@@ -188,24 +195,28 @@ public class PrintMinistereUI extends JInternalFrame  {
     }    
     
     private void listMinistères(  List<Ministeres> listMinistères ){
-        if( listMinistères != null){
-            table = new Object[listMinistères.size()][10];
-            for(int i = 0; i < listMinistères.size(); i++){
-                table[i][0] = listMinistères.get(i).getCode();
-                table[i][1] = listMinistères.get(i).getNom();
-                table[i][2] = listMinistères.get(i).getSigle();
-                table[i][3] = listMinistères.get(i).getMinistreActuel();
-                table[i][4] = listMinistères.get(i).getNoBRH();
-                table[i][5] = listMinistères.get(i).getSoldeBRH();
-                table[i][6] = listMinistères.get(i).getNoBNC();
-                table[i][7] = listMinistères.get(i).getSoldeBNC();
-                table[i][8] = listMinistères.get(i).getTelephone();
-                table[i][9] = listMinistères.get(i).getAdresse().replace("_", " ");
-            }
-            Nrow = "Nonbre de ligne : " + listMinistères.size();
-            this.lblnbRow.setText(Nrow);
-            tableListe.setModel(new DefaultTableModel(table, TitileListMinistères ){});
-        } else JOptionPane.showMessageDialog(null, "Pas trouv\u00E9", "Not Found", JOptionPane.WARNING_MESSAGE, new ImageIcon("icons/warning_shield_64px.png") );
+        if ( LoginUI.search ) {
+            List<GestionFonds> listFonds = null;
+            listFonds = new GestionFonds_controleur().recherche(null, false);
+            if( listMinistères != null && listFonds != null ){
+                table = new Object[listMinistères.size()][10];
+                for(int i = 0; i < listMinistères.size(); i++){
+                    table[i][0] = listMinistères.get(i).getCode();
+                    table[i][1] = listMinistères.get(i).getNom();
+                    table[i][2] = listMinistères.get(i).getSigle();
+                    table[i][3] = listMinistères.get(i).getMinistreActuel();
+                    table[i][4] = listMinistères.get(i).getNoBRH();
+                    table[i][5] = listFonds.get(i).getMontantBRH();
+                    table[i][6] = listMinistères.get(i).getNoBNC();
+                    table[i][7] = listFonds.get(i).getMontantBNC();
+                    table[i][8] = listMinistères.get(i).getTelephone();
+                    table[i][9] = listMinistères.get(i).getAdresse().replace("_", " ");
+                }
+                Nrow = "Nonbre de ligne : " + listMinistères.size();
+                this.lblnbRow.setText(Nrow);
+                tableListe.setModel(new DefaultTableModel(table, TitileListMinistères ){});
+            } else JOptionPane.showMessageDialog(null, "Pas trouv\u00E9", "Not Found", JOptionPane.WARNING_MESSAGE, new ImageIcon("icons/warning_shield_64px.png") );
+        }
     }
 
     private class DefaultTableModelImpl extends DefaultTableModel {

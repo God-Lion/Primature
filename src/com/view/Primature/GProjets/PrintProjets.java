@@ -4,6 +4,7 @@ import com.Controleur.GestionProjets_controleur;
 import com.Model.GestionProjets;
 import com.view.Primature.Listener.Listener;
 import com.view.Primature.PrimatureUI;
+import com.view.User.LoginUI;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -54,6 +55,7 @@ public class PrintProjets extends JInternalFrame  {
         GridBagConstraints c = new GridBagConstraints();
         tfSrecherche = new JTextField();
         tfSrecherche.setText("Recherche");
+        tfSrecherche.setEditable( LoginUI.search );
         tfSrecherche.setFont(new Font("Arial", 2, 14)); 
         tfSrecherche.setForeground(new Color(153, 153, 153));
         tfSrecherche.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -110,6 +112,7 @@ public class PrintProjets extends JInternalFrame  {
                         JMenuItem supprimerLine = new JMenuItem("Supprimer");
                         supprimerLine.setIcon( new ImageIcon("icons/cancelform.png") );
                         supprimerLine.setForeground( new Color( 201, 15, 15 ) );
+                        supprimerLine.setEnabled( LoginUI.delete );
                         supprimerLine.addActionListener( new ActionListener() {
                             @Override
                             public void actionPerformed(ActionEvent e) { 
@@ -123,6 +126,7 @@ public class PrintProjets extends JInternalFrame  {
                         menu.add( supprimerLine );
                         JMenuItem modifierLine = new JMenuItem("Modifier");
                         modifierLine.setIcon( new ImageIcon("icons/sort_by_modified_date.png") );
+                        modifierLine.setEnabled( LoginUI.modify );
                         modifierLine.addActionListener( new ActionListener() {
                             @Override
                             public void actionPerformed(ActionEvent e) { remplissageChamp(); }
@@ -187,24 +191,26 @@ public class PrintProjets extends JInternalFrame  {
     }    
     
     private void listProjets(  List<GestionProjets> listProjets ){
-        if( listProjets != null){
-            table = new Object[listProjets.size()][10];
-            for(int i = 0; i < listProjets.size(); i++){
-                table[i][0] = listProjets.get(i).getCode();
-                table[i][1] = listProjets.get(i).getExerciceFiscale();
-                table[i][2] = listProjets.get(i).getMinistere();
-                table[i][3] = listProjets.get(i).getNumeroProjet();
-                table[i][4] = listProjets.get(i).getTypeProjet();
-                table[i][5] = listProjets.get(i).getZoneConcernee();
-                table[i][6] = listProjets.get(i).getNomFirme();
-                table[i][7] = listProjets.get(i).getMaitreOuvrage();
-                table[i][8] = listProjets.get(i).getCoutProjet();
-                table[i][9] = listProjets.get(i).getDescriptionProjet();
-            }
-            Nrow = "Nonbre de ligne : " + listProjets.size();
-            this.lblnbRow.setText(Nrow);
-            tableListe.setModel(new DefaultTableModel(table, TitileListProjets ){});
-        } else JOptionPane.showMessageDialog(null, "Pas trouv\u00E9", "Not Found", JOptionPane.WARNING_MESSAGE, new ImageIcon("icons/warning_shield_64px.png") );
+        if (LoginUI.search ) {
+            if( listProjets != null){
+                table = new Object[listProjets.size()][10];
+                for(int i = 0; i < listProjets.size(); i++){
+                    table[i][0] = listProjets.get(i).getCode();
+                    table[i][1] = listProjets.get(i).getExerciceFiscale();
+                    table[i][2] = listProjets.get(i).getMinistere();
+                    table[i][3] = listProjets.get(i).getNumeroProjet();
+                    table[i][4] = listProjets.get(i).getTypeProjet();
+                    table[i][5] = listProjets.get(i).getZoneConcernee();
+                    table[i][6] = listProjets.get(i).getNomFirme();
+                    table[i][7] = listProjets.get(i).getMaitreOuvrage();
+                    table[i][8] = listProjets.get(i).getCoutProjet();
+                    table[i][9] = listProjets.get(i).getDescriptionProjet();
+                }
+                Nrow = "Nonbre de ligne : " + listProjets.size();
+                this.lblnbRow.setText(Nrow);
+                tableListe.setModel(new DefaultTableModel(table, TitileListProjets ){});
+            } else JOptionPane.showMessageDialog(null, "Pas trouv\u00E9", "Not Found", JOptionPane.WARNING_MESSAGE, new ImageIcon("icons/warning_shield_64px.png") );
+        }
     }
     
     private class DefaultTableModelImpl extends DefaultTableModel {
@@ -220,7 +226,7 @@ public class PrintProjets extends JInternalFrame  {
         projetsUI.remplir(tableListe.getValueAt(row, 0).toString());
     }
     
-    public  void refreshList() {
+    public final  void refreshList() {
         try {
             this.list = controleur.recherche(null, false);
             if ( this.list != null ) listProjets(this.list );

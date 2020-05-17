@@ -30,7 +30,7 @@ public class AdminUI extends JInternalFrame {
     
     private void Initcomposants() {
         btnUser = new JButton("Nouveau Utilisateur");
-        btnUser.setIcon( new ImageIcon("icons/Save.png") );
+        btnUser.setIcon( new ImageIcon("icons/user.png") );
         btnUser.setBackground( new Color( 57, 92, 118 ) );
         btnUser.setForeground( new Color( 227, 229, 255 ) );
         c.fill = GridBagConstraints.BOTH;
@@ -46,7 +46,7 @@ public class AdminUI extends JInternalFrame {
         panelPrincipal.add(btnUser, c);
         
         btnListUser = new JButton("Liste d'Utilisateur");
-        btnListUser.setIcon( new ImageIcon("icons/Save.png") );
+        btnListUser.setIcon( new ImageIcon("icons/list2.png") );
         btnListUser.setBackground( new Color( 57, 92, 118 ) );
         btnListUser.setForeground( new Color( 227, 229, 255 ) );
         c.fill = GridBagConstraints.BOTH;

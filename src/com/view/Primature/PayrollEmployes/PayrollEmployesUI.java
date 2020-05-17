@@ -5,6 +5,7 @@ import com.Model.Ministeres;
 import com.Model.PayrollEmployes;
 import com.view.Primature.Listener.Listener;
 import com.view.Primature.PrimatureUI;
+import com.view.User.LoginUI;
 
 import java.awt.Color;
 import java.awt.GridBagConstraints;
@@ -211,6 +212,10 @@ public final class PayrollEmployesUI extends JInternalFrame  {
         btnEnregistrer.setIcon( new ImageIcon("icons/Save.png") );
         btnEnregistrer.setBackground( new Color( 63, 72, 204 ) );
         btnEnregistrer.setForeground( new Color( 227, 229, 255 ) );
+        if (btnEnregistrer.getText().equals("Enregistrer")) 
+            btnEnregistrer.setEnabled( LoginUI.save );
+        if (btnEnregistrer.getText().equals("Modifier"))
+            btnEnregistrer.setEnabled( LoginUI.modify );
         c.fill = GridBagConstraints.FIRST_LINE_END;
         c.insets = new Insets(60, 0, 20, 0);
         c.gridx = 4;

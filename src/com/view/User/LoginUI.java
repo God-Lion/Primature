@@ -10,6 +10,8 @@ import java.awt.Frame;
 import java.awt.Point;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.LinkedList;
+import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -85,10 +87,7 @@ public class LoginUI extends JDialog{
         btnLoginCancel = new JButton("Annuler");
         btnLoginCancel.setIcon( new javax.swing.ImageIcon("icons/cancel.png") );
         btnLoginCancel.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) { 
-                setVisible(false);
-//                System.exit(0);
-            }
+            public void actionPerformed(java.awt.event.ActionEvent evt) { setVisible(false); }
         });
         btnLoginCancel.setBounds(227, 280, 90, 30);
         form.add( btnLoginCancel );
@@ -109,11 +108,19 @@ public class LoginUI extends JDialog{
             this.tfUsername.setText("");
             lblPasswordIfError.setIcon( new ImageIcon("icons/cancelform.png") );
         }else {
-            
-            if (controleur.login(log)) {
-                trouver = "true";
-                setVisible(false);
-            } else{
+            try {
+                this.list = controleur.recherche(log, true);
+                if ( this.list != null ) {
+                    if( list.get(0).getUsername().equals( log.getUsername()) && list.get(0).getPassword().equals( log.getPassword()) ){
+                        trouver = list.get(0).getMODE_CONNECTION();
+                        save = list.get(0).isRightSave();
+                        modify = list.get(0).isRightModify();
+                        delete = list.get(0).isRightDelete();
+                        search = list.get(0).isRightSearch();
+                        setVisible(false);
+                    }
+                }
+            } catch (IndexOutOfBoundsException e) {
                 this.tfUsername.setText("");
                 this.lblUsernameIfError.setIcon( new javax.swing.ImageIcon("icons/cancelform.png") );
                 this.tfPassWord.setText("");
@@ -121,8 +128,6 @@ public class LoginUI extends JDialog{
             }
         }  
     }
-    
-    public String connect(){ return this.trouver; }
     
     private final LoginControleur controleur = new LoginControleur();
     private final JPanel panelPrincipal;
@@ -132,6 +137,11 @@ public class LoginUI extends JDialog{
     private JLabel lblPasswordIfError;
     private JButton btnConnect;
     private JButton btnLoginCancel;
-    private String trouver = "false";
-    public static String idUseur;
+    private List<Login> list = new LinkedList<>();
+    public static String trouver = "false";
+    public static boolean save = false;
+    public static boolean modify = false;
+    public static boolean delete = false;
+    public static boolean search = false;
+    public static JDialog loginUI;
 }

@@ -3,6 +3,7 @@ package com.view.Primature.PayrollEmployes;
 import com.Controleur.GestionPayrollEmployes_controleur;
 import com.Model.PayrollEmployes;
 import com.view.Primature.PrimatureUI;
+import com.view.User.LoginUI;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -53,6 +54,7 @@ public class PrintPayrollEmployes extends JInternalFrame  {
         GridBagConstraints c = new GridBagConstraints();
         tfSrecherche = new JTextField();
         tfSrecherche.setText("Recherche");
+        System.out.println( LoginUI.search );
         tfSrecherche.setFont(new Font("Arial", 2, 14)); 
         tfSrecherche.setForeground(new Color(153, 153, 153));
         tfSrecherche.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -106,6 +108,7 @@ public class PrintPayrollEmployes extends JInternalFrame  {
                         JPopupMenu menu = new JPopupMenu();
                         JMenuItem modifierLine = new JMenuItem("Modifier");
                         modifierLine.setIcon( new ImageIcon("icons/sort_by_modified_date.png") );
+                        modifierLine.setEnabled( LoginUI.modify );
                         modifierLine.addActionListener( new ActionListener() {
                             @Override
                             public void actionPerformed(ActionEvent e) { remplissageChamp(); }
@@ -170,21 +173,23 @@ public class PrintPayrollEmployes extends JInternalFrame  {
     }    
     
     private void listPayroll(  List<PayrollEmployes> listePayroll ){
-        if( listePayroll != null){
-            table = new Object[listePayroll.size()][8];
-            for(int i = 0; i < listePayroll.size(); i++){
-                table[i][0] = listePayroll.get(i).getId();
-                table[i][1] = listePayroll.get(i).getExerciceFiscale();
-                table[i][2] = listePayroll.get(i).getMinistere();
-                table[i][3] = listePayroll.get(i).getMois();
-                table[i][4] = listePayroll.get(i).getNomEmploye();
-                table[i][5] = listePayroll.get(i).getNoChequeBNC();
-                table[i][6] = listePayroll.get(i).getMontant();
-            }
-            Nrow = "Nonbre de ligne : " + listePayroll.size();
-            this.lblnbRow.setText(Nrow);
-            tableListe.setModel(new DefaultTableModel(table, TitileListePayroll ){});
-        }else JOptionPane.showMessageDialog(null, "Pas trouv\u00E9", "Not Found", JOptionPane.WARNING_MESSAGE, new ImageIcon("icons/warning_shield_64px.png") );
+        if ( LoginUI.search ) {
+            if( listePayroll != null){
+                table = new Object[listePayroll.size()][8];
+                for(int i = 0; i < listePayroll.size(); i++){
+                    table[i][0] = listePayroll.get(i).getId();
+                    table[i][1] = listePayroll.get(i).getExerciceFiscale();
+                    table[i][2] = listePayroll.get(i).getMinistere();
+                    table[i][3] = listePayroll.get(i).getMois();
+                    table[i][4] = listePayroll.get(i).getNomEmploye();
+                    table[i][5] = listePayroll.get(i).getNoChequeBNC();
+                    table[i][6] = listePayroll.get(i).getMontant();
+                }
+                Nrow = "Nonbre de ligne : " + listePayroll.size();
+                this.lblnbRow.setText(Nrow);
+                tableListe.setModel(new DefaultTableModel(table, TitileListePayroll ){});
+            }else JOptionPane.showMessageDialog(null, "Pas trouv\u00E9", "Not Found", JOptionPane.WARNING_MESSAGE, new ImageIcon("icons/warning_shield_64px.png") ); 
+        }
     }
     
     private class DefaultTableModelImpl extends DefaultTableModel {
@@ -200,7 +205,7 @@ public class PrintPayrollEmployes extends JInternalFrame  {
         payrollEmployesUI.remplir(tableListe.getValueAt(row, 0).toString());
     }
     
-    public  void refreshList() {
+    public final  void refreshList() {
         this.list = controleur.recherche(null, false);
         if ( this.list != null ) listPayroll(this.list );
     }

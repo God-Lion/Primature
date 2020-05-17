@@ -66,15 +66,23 @@ public class PrimatureUI extends JFrame {
     private void connect() {
         LoginUI loginUI = new LoginUI(this, true);
         loginUI.setVisible( true );
-        if( loginUI.connect().equalsIgnoreCase("simple") ){
+        if( LoginUI.trouver.equalsIgnoreCase("simple") ){
             loginUI.setVisible(false);
             this.setVisible( true );
-        }
-        if( loginUI.connect().equalsIgnoreCase("admin") ){
+        } if( LoginUI.trouver.equalsIgnoreCase("admin") ){
            loginUI.setVisible(false);
            this.setVisible( true );
-        }
-        if( loginUI.connect().equals("false") ) System.exit(0);
+        } if( LoginUI.trouver.equals("false") ) System.exit(0);
+    }
+    
+    private void deconnect() {
+        this.setVisible(false);
+        LoginUI.trouver = "false";
+        LoginUI.save = false;
+        LoginUI.modify = false;
+        LoginUI.delete = false;
+        LoginUI.search = false;
+        connect();
     }
     
     private void Initcomposants(){
@@ -89,82 +97,94 @@ public class PrimatureUI extends JFrame {
         JMenuBar menuBar = new JMenuBar();
 
         // Définition du menu déroulant "File" et de son contenu
-        JMenu mnuFile = new JMenu( "File" );
-        mnuFile.setMnemonic( 'F' );
+        JMenu mnuOption = new JMenu( "Options" );
+        mnuOption.setMnemonic( 'O' );
 
-        JMenuItem mnuNewFile = new JMenuItem( "New File" );
-        mnuNewFile.setIcon( new ImageIcon( "icons/new.png" ) );
-        mnuNewFile.setMnemonic( 'N' );
-        mnuNewFile.setAccelerator( KeyStroke.getKeyStroke(KeyEvent.VK_N, KeyEvent.CTRL_DOWN_MASK) );
-//        mnuNewFile.addActionListener( this::mnuNewListener );
-        mnuFile.add(mnuNewFile);
-
-        mnuFile.addSeparator();
-
-        JMenuItem mnuOpenFile = new JMenuItem( "Open File ..." );
-        mnuOpenFile.setIcon( new ImageIcon( "icons/open.png" ) );
-        mnuOpenFile.setMnemonic( 'O' );
-        mnuOpenFile.setAccelerator( KeyStroke.getKeyStroke(KeyEvent.VK_O, KeyEvent.CTRL_DOWN_MASK) );
-        mnuFile.add(mnuOpenFile);
-
-        JMenuItem mnuSaveFile = new JMenuItem( "Save File ..." );
-        mnuSaveFile.setIcon( new ImageIcon( "icons/save.png" ) );
-        mnuSaveFile.setMnemonic( 'S' );
-        mnuSaveFile.setAccelerator( KeyStroke.getKeyStroke(KeyEvent.VK_S, KeyEvent.CTRL_DOWN_MASK) );
-        mnuFile.add(mnuSaveFile);
-
-        JMenuItem mnuSaveFileAs = new JMenuItem( "Save File As ..." );
-        mnuSaveFileAs.setIcon( new ImageIcon( "icons/save_as.png" ) );
-        mnuSaveFileAs.setMnemonic( 'A' );
-        mnuFile.add(mnuSaveFileAs);
-
-        mnuFile.addSeparator();
-
+        JMenuItem mnuDeconnet = new JMenuItem( "Deconnecter" );
+        mnuDeconnet.setIcon( new ImageIcon( "icons/logout.png" ) );
+        mnuDeconnet.setMnemonic( 'D' );
+        mnuDeconnet.setAccelerator( KeyStroke.getKeyStroke(KeyEvent.VK_D, KeyEvent.CTRL_DOWN_MASK) );
+        mnuDeconnet.addActionListener( new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent arg0) {  deconnect(); }
+        });
+        mnuOption.add( mnuDeconnet );
+        mnuOption.addSeparator();
         JMenuItem mnuExit = new JMenuItem( "Exit" );
         mnuExit.setIcon( new ImageIcon( "icons/exit.png" ) );
         mnuExit.setMnemonic( 'x' );
         mnuExit.setAccelerator( KeyStroke.getKeyStroke(KeyEvent.VK_F4, KeyEvent.ALT_DOWN_MASK) );
-        mnuFile.add(mnuExit);
+        mnuExit.addActionListener( new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent arg0) {  System.exit(0); }
+        });
+        mnuOption.add(mnuExit);
         
-        menuBar.add(mnuFile);
+        menuBar.add(mnuOption);
         
         // Définition du menu déroulant "Edit" et de son contenu
-        JMenu mnuEdit = new JMenu( "Edit" );
-        mnuEdit.setMnemonic( 'E' );
+        JMenu mnuRacour = new JMenu( "Racourcis" );
+        mnuRacour.setMnemonic( 'R' );
         
-        JMenuItem mnuUndo = new JMenuItem( "Undo" );
-        mnuUndo.setIcon( new ImageIcon( "icons/undo.png" ) );
-        mnuUndo.setMnemonic( 'U' );
-        mnuUndo.setAccelerator( KeyStroke.getKeyStroke(KeyEvent.VK_Z, KeyEvent.CTRL_DOWN_MASK) );
-        mnuEdit.add(mnuUndo);
-        
-        JMenuItem mnuRedo = new JMenuItem( "Redo" );
-        mnuRedo.setIcon( new ImageIcon( "icons/redo.png" ) );
-        mnuRedo.setMnemonic( 'R' );
-        mnuRedo.setAccelerator( KeyStroke.getKeyStroke(KeyEvent.VK_U, KeyEvent.CTRL_DOWN_MASK) );
-        mnuEdit.add(mnuRedo);
-        
-        mnuEdit.addSeparator();
-        
-        JMenuItem mnuCopy = new JMenuItem( "Copy" );
-        mnuCopy.setIcon( new ImageIcon( "icons/copy.png" ) );
-        mnuCopy.setMnemonic( 'C' );
-        mnuCopy.setAccelerator( KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.CTRL_DOWN_MASK) );
-        mnuEdit.add(mnuCopy);
-        
-        JMenuItem mnuCut = new JMenuItem( "Cut" );
-        mnuCut.setIcon( new ImageIcon( "icons/cut.png" ) );
-        mnuCut.setMnemonic( 't' );
-        mnuCut.setAccelerator( KeyStroke.getKeyStroke(KeyEvent.VK_X, KeyEvent.CTRL_DOWN_MASK) );
-        mnuEdit.add(mnuCut);
-        
-        JMenuItem mnuPaste = new JMenuItem( "Paste" );
-        mnuPaste.setIcon( new ImageIcon( "icons/paste.png" ) );
-        mnuPaste.setMnemonic( 'P' );
-        mnuPaste.setAccelerator( KeyStroke.getKeyStroke(KeyEvent.VK_V, KeyEvent.CTRL_DOWN_MASK) );
-        mnuEdit.add(mnuPaste);
-
-        menuBar.add(mnuEdit);
+        JMenuItem mnuMinistere = new JMenuItem( "Ministere" );
+        mnuMinistere.setIcon( new ImageIcon( "icons/parliament.png" ) );
+        mnuMinistere.setMnemonic( 'M' );
+        mnuMinistere.setAccelerator( KeyStroke.getKeyStroke(KeyEvent.VK_M, KeyEvent.CTRL_DOWN_MASK) );
+        mnuMinistere.addActionListener( new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+                gMinistèresUI.removeAll();
+                gMinistèresUI.repaint();
+                addMinistereUI();
+                addPrintMinistereUI();
+            }
+        });
+        mnuRacour.add(mnuMinistere);
+        mnuRacour.addSeparator();
+        JMenuItem mnuFonds = new JMenuItem( "Fonds" );
+        mnuFonds.setIcon( new ImageIcon( "icons/money_bag.png" ) );
+        mnuFonds.setMnemonic( 'F' );
+        mnuFonds.setAccelerator( KeyStroke.getKeyStroke(KeyEvent.VK_F, KeyEvent.CTRL_DOWN_MASK) );
+        mnuFonds.addActionListener( new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+                gMinistèresUI.removeAll();
+                gMinistèresUI.repaint();
+                addFondUI();
+                addPrintFondUI();
+            }
+        });
+        mnuRacour.add(mnuFonds);
+        JMenuItem mnuPayroll = new JMenuItem( "Payroll Employer" );
+        mnuPayroll.setIcon( new ImageIcon( "icons/payroll.png" ) );
+        mnuPayroll.setMnemonic( 'E' );
+        mnuPayroll.setAccelerator( KeyStroke.getKeyStroke(KeyEvent.VK_E, KeyEvent.CTRL_DOWN_MASK) );
+        mnuPayroll.addActionListener( new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+                gMinistèresUI.removeAll();
+                gMinistèresUI.repaint();
+                addPayrollEmployees();
+                addPrintPayrollEmployees();
+            }
+        });
+        mnuRacour.add(mnuPayroll);
+        mnuRacour.addSeparator();
+        JMenuItem mnuProjet = new JMenuItem( "Projets" );
+        mnuProjet.setIcon( new ImageIcon( "icons/project.png" ) );
+        mnuProjet.setMnemonic( 'P' );
+        mnuProjet.setAccelerator( KeyStroke.getKeyStroke(KeyEvent.VK_P, KeyEvent.CTRL_DOWN_MASK) );
+        mnuProjet.addActionListener( new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+                gMinistèresUI.removeAll();
+                gMinistèresUI.repaint();
+                addGProjets();
+                addPrintGProjets();
+            }
+        });
+        mnuRacour.add(mnuProjet);
+        menuBar.add(mnuRacour);
 
         // Définition du menu déroulant "Help" et de son contenu
         JMenu mnuHelp = new JMenu( "Help" );
@@ -185,7 +205,7 @@ public class PrimatureUI extends JFrame {
         btnGMinistere.addActionListener( new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent arg0) {
-                 gMinistèresUI.removeAll();
+                gMinistèresUI.removeAll();
                 gMinistèresUI.repaint();
                 addMinistereUI();
                 addPrintMinistereUI();
@@ -240,15 +260,9 @@ public class PrimatureUI extends JFrame {
                 gMinistèresUI.removeAll();
                 gMinistèresUI.repaint();
                 addAdminUI();
-//                addNewUserUI();
-//                addPrintGProjets();
             }
         });
-        toolBar.add( btnPanelAdmin );
-        
-        
-        
-        
+        if( LoginUI.trouver.equals("admin") ) toolBar.add( btnPanelAdmin );
        return toolBar;
     }
     

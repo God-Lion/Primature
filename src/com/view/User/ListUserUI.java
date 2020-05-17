@@ -2,7 +2,6 @@ package com.view.User;
 
 import com.Controleur.LoginControleur;
 import com.Model.Login;
-import com.Model.Ministeres;
 import com.view.Primature.Listener.Listener;
 import com.view.Primature.PrimatureUI;
 
@@ -31,7 +30,6 @@ import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 
 public final class ListUserUI extends JInternalFrame  {
@@ -97,8 +95,6 @@ public final class ListUserUI extends JInternalFrame  {
         this.tableListe.setModel(new DefaultTableModelImpl( new Object [][] {}, TitileListUser ));
         JScrollPane scrollListe = new JScrollPane();
         scrollListe.setViewportView(tableListe);
-        ListSelectionModel cellSelectionData = this.tableListe.getSelectionModel();
-        cellSelectionData.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
         this.tableListe.setColumnSelectionAllowed( false );
         this.tableListe.setRowSelectionAllowed( true );
         this.tableListe.addMouseListener(  new MouseAdapter(){
@@ -112,12 +108,11 @@ public final class ListUserUI extends JInternalFrame  {
                         supprimerLine.addActionListener( new ActionListener() {
                             @Override
                             public void actionPerformed(ActionEvent e) { 
-//                                GestionMinisteres_controleur controleur = new GestionMinisteres_controleur();
-//                                int row = tableListe.getSelectedRow(); 
-//                                if( controleur.delete((String)tableListe.getValueAt(row, 0))) {
-//                                    Listener listener = new Listener();
-//                                    listener.supprimer( e );    
-//                                }
+                                int row = tableListe.getSelectedRow(); 
+                                if( controleur.delete((String)tableListe.getValueAt(row, 0))) {
+                                    listener.supprimer(e);
+                                    refreshList();
+                                } else listener.deleteError(e, "ListUserUI"); 
                             }
                         });
                         menu.add( supprimerLine );
@@ -126,7 +121,6 @@ public final class ListUserUI extends JInternalFrame  {
                         modifierLine.addActionListener( new ActionListener() {
                             @Override
                             public void actionPerformed(ActionEvent e) {
-                                PrimatureUI primatureUI = (PrimatureUI) PrimatureUI.primatureUI;
                                 primatureUI.addRigthAccessUserUI();
                                 remplissageChamp();
                             }
@@ -154,25 +148,6 @@ public final class ListUserUI extends JInternalFrame  {
         c.gridx = 0;
         c.gridy = 2;
         panelPrincipal.add( lblnbRow, c);
-        JButton btnLink = new JButton();
-        btnLink.setIcon(new ImageIcon("icons/link.png"));
-        c.fill = GridBagConstraints.BOTH;
-        c.insets = new Insets(25, 0, 20, 80);
-        c.gridx = 1;
-        c.gridy = 2;
-        btnLink.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-//                PrimatureUI primatureUI = null;
-//                primatureUI = (PrimatureUI) PrimatureUI.primatureUI;
-//                if (MinistereUI.ministereUI.isClosed()) primatureUI.addMinistereUI();
-//                else {
-//                    MinistereUI.ministereUI.setBounds(0, 0, 1005 , 460);
-//                    print.moveToBack();
-//                }
-            }
-        }); 
-        panelPrincipal.add(btnLink, c);
     }
     
     private void tfrechercheFocusGained( FocusEvent e) {                                     
@@ -226,12 +201,12 @@ public final class ListUserUI extends JInternalFrame  {
         } catch (IndexOutOfBoundsException e) {}
     }
     
-    
     private final String[] TitileListUser = { "Username", "Enregistrer", "Modifier", "Supprimer", "Rechercher"};
     private final JPanel panelPrincipal = new JPanel( new GridBagLayout() );
     private final GridBagConstraints c = new GridBagConstraints();
     private final LoginControleur controleur = new LoginControleur();
     private final Listener listener = new Listener();
+    private final PrimatureUI primatureUI = (PrimatureUI) PrimatureUI.primatureUI;
     private JTable tableListe;
     private Object table[][] = null;
     private JTextField tfSrecherche;

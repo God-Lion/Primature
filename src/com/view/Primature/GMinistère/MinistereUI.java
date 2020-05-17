@@ -4,6 +4,7 @@ import com.Model.Ministeres;
 import com.Controleur.GestionMinisteres_controleur;
 import com.view.Primature.Listener.Listener;
 import com.view.Primature.PrimatureUI;
+import com.view.User.LoginUI;
 
 import java.awt.Color;
 import java.awt.GridBagConstraints;
@@ -321,6 +322,10 @@ public final class MinistereUI extends JInternalFrame  {
 //        panelPrincipal.add(btnSupprimer, c);
         btnEnregistrer = new JButton("Enregistrer");
         btnEnregistrer.setIcon( new ImageIcon("icons/Save.png") );
+        if (btnEnregistrer.getText().equals("Enregistrer")) 
+            btnEnregistrer.setEnabled( LoginUI.save );
+        if (btnEnregistrer.getText().equals("Modifier"))
+            btnEnregistrer.setEnabled( LoginUI.modify );
         btnEnregistrer.addActionListener( new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

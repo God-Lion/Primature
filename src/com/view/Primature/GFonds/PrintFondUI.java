@@ -4,6 +4,7 @@ import com.Controleur.GestionFonds_controleur;
 import com.Model.GestionFonds;
 import com.view.Primature.Listener.Listener;
 import com.view.Primature.PrimatureUI;
+import com.view.User.LoginUI;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -55,6 +56,8 @@ public class PrintFondUI extends JInternalFrame  {
         GridBagConstraints c = new GridBagConstraints();
         tfSrecherche = new JTextField();
         tfSrecherche.setText("Recherche");
+        tfSrecherche.setEditable( LoginUI.search );
+        System.out.println( LoginUI.search );
         tfSrecherche.setFont(new Font("Arial", 2, 14)); 
         tfSrecherche.setForeground(new Color(153, 153, 153));
         tfSrecherche.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -108,6 +111,7 @@ public class PrintFondUI extends JInternalFrame  {
                         JPopupMenu menu = new JPopupMenu();
                         JMenuItem modifierLine = new JMenuItem("Modifier");
                         modifierLine.setIcon( new ImageIcon("icons/sort_by_modified_date.png") );
+                        modifierLine.setEnabled( LoginUI.modify );
                         modifierLine.addActionListener( new ActionListener() {
                             @Override
                             public void actionPerformed(ActionEvent e) { remplissageChamp(); }
@@ -172,20 +176,22 @@ public class PrintFondUI extends JInternalFrame  {
     }    
     
     private void listFonds(  List<GestionFonds> listFonds ){
-        if( listFonds != null){
-            table = new Object[listFonds.size()][8];
-            for(int i = 0; i < listFonds.size(); i++){
-                table[i][0] = listFonds.get(i).getId();
-                table[i][1] = listFonds.get(i).getExerciceFiscale();
-                table[i][2] = listFonds.get(i).getMinistere();
-                table[i][3] = listFonds.get(i).getMontantBRH();
-                table[i][4] = listFonds.get(i).getMontantBNC();
-                table[i][5] = listFonds.get(i).getSignataires();
-            }
-            Nrow = "Nonbre de ligne : " + listFonds.size();
-            this.lblnbRow.setText(Nrow);
-            tableListe.setModel(new DefaultTableModel(table, TittleListFonds ){});
-        } else listener.listeVide(null);
+        if ( LoginUI.search ) {
+            if( listFonds != null){
+                table = new Object[listFonds.size()][8];
+                for(int i = 0; i < listFonds.size(); i++){
+                    table[i][0] = listFonds.get(i).getId();
+                    table[i][1] = listFonds.get(i).getExerciceFiscale();
+                    table[i][2] = listFonds.get(i).getMinistere();
+                    table[i][3] = listFonds.get(i).getMontantBRH();
+                    table[i][4] = listFonds.get(i).getMontantBNC();
+                    table[i][5] = listFonds.get(i).getSignataires();
+                }
+                Nrow = "Nonbre de ligne : " + listFonds.size();
+                this.lblnbRow.setText(Nrow);
+                tableListe.setModel(new DefaultTableModel(table, TittleListFonds ){});
+            } else listener.listeVide(null);
+        }
     }
     
     private class DefaultTableModelImpl extends DefaultTableModel {
@@ -201,7 +207,7 @@ public class PrintFondUI extends JInternalFrame  {
         fondUI.remplir(tableListe.getValueAt(row, 0).toString());
     }
     
-    public  void refreshList() {
+    public final  void refreshList() {
         this.list = controleur.recherche(null, false);
         if ( this.list != null ) listFonds( this.list );
     }

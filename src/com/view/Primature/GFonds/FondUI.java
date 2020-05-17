@@ -5,6 +5,7 @@ import com.Model.GestionFonds;
 import com.Model.Ministeres;
 import com.view.Primature.Listener.Listener;
 import com.view.Primature.PrimatureUI;
+import com.view.User.LoginUI;
 
 import java.awt.Color;
 import java.awt.GridBagConstraints;
@@ -243,6 +244,10 @@ public final class FondUI extends JInternalFrame  {
         c.insets = new Insets(60, 0, 20, 0);
         c.gridx = 6;
         c.gridy = 7;
+        if (btnEnregistrer.getText().equals("Allouer")) 
+            btnEnregistrer.setEnabled( LoginUI.save );
+        if (btnEnregistrer.getText().equals("Reallouer"))
+            btnEnregistrer.setEnabled( LoginUI.modify );
         btnEnregistrer.addActionListener( new ActionListener() {
            @Override
             public void actionPerformed(ActionEvent e) {

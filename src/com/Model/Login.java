@@ -12,10 +12,6 @@ public class Login {
 
 
     public Login() {}
-
-    public Login(String idUser) {
-        this.idUser = idUser;
-    }
     
     public Login( String username, String password ) {
         this.username = username;
@@ -38,8 +34,9 @@ public class Login {
         this.rightSearch = rightSearch;
     }
 
-    public Login(String username, boolean rightSave, boolean rightModify, boolean rightDelete, boolean rightSearch) {
+    public Login(String username, String MODE_CONNECTION, boolean rightSave, boolean rightModify, boolean rightDelete, boolean rightSearch) {
         this.username = username;
+        this.MODE_CONNECTION = MODE_CONNECTION;
         this.rightSave = rightSave;
         this.rightModify = rightModify;
         this.rightDelete = rightDelete;
@@ -56,8 +53,6 @@ public class Login {
         this.rightDelete = rightDelete;
         this.rightSearch = rightSearch;
     }
-    
-    
     
     public String getIdUser() {
         return idUser;

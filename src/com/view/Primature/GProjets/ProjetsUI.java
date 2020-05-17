@@ -5,6 +5,7 @@ import com.Model.GestionProjets;
 import com.Model.Ministeres;
 import com.view.Primature.Listener.Listener;
 import com.view.Primature.PrimatureUI;
+import com.view.User.LoginUI;
 
 import java.awt.Color;
 import java.awt.GridBagConstraints;
@@ -265,6 +266,7 @@ public final class ProjetsUI extends JInternalFrame  {
         });               
         panelPrincipal.add(btnNettoyer, c);
         JButton btnSupprimer = new JButton("Supprimer");
+        btnSupprimer.setEnabled( LoginUI.delete );
         btnSupprimer.addActionListener( new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -289,6 +291,10 @@ public final class ProjetsUI extends JInternalFrame  {
         btnEnregistrer.setIcon( new ImageIcon("icons/Save.png") );
         btnEnregistrer.setBackground( new Color( 63, 72, 204 ) );
         btnEnregistrer.setForeground( new Color( 227, 229, 255 ) );
+        if (btnEnregistrer.getText().equals("Enregistrer")) 
+            btnEnregistrer.setEnabled( LoginUI.save );
+        if (btnEnregistrer.getText().equals("Modifier"))
+            btnEnregistrer.setEnabled( LoginUI.modify );
         btnEnregistrer.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

@@ -83,9 +83,6 @@ public class DataBase {
                 this.preparedStatement = this.connexion.prepareStatement( sql );
                 for (int i = 0; i < condValue.size(); i++)
                     this.preparedStatement.setString(i+1, (String) condValue.get(i));
-                
-                System.out.println(this.preparedStatement);
-                
                 this.resultSet = this.preparedStatement.executeQuery();
                 ResultSetMetaData metaData = this.resultSet.getMetaData();
                 int nbColumn = metaData.getColumnCount();
@@ -180,20 +177,12 @@ public class DataBase {
                    if(req.containsKey("fields")) sql += String.join(",", fieldsKey);
                    actions = "insert";
                 }
-                
-                System.out.println(sql);
-                
                 this.preparedStatement = this.connexion.prepareStatement( sql );
                 for (int i = 0; i < fieldsValue.size(); i++) {
                     System.out.println(fieldsValue.get(i));
                     this.preparedStatement.setString(i+1, (String) fieldsValue.get(i));
                 }
                 save = (byte) this.preparedStatement.executeUpdate();
-                System.out.println(this.preparedStatement);
-//                if (actions.equals("insert")) {
-//                    this.resultSet = this.preparedStatement.getGeneratedKeys();
-//                  
-//                }
             }       
         } catch (SQLException ex) {
            throw new Exception(ex.toString());
