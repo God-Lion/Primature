@@ -35,7 +35,7 @@ import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
 
 public class PrimatureUI extends JFrame {
-    public JDesktopPane gMinistèresUI = new JDesktopPane();
+    public JDesktopPane gMinistèresUI;
     private JPanel panelPrincipal;
     public static JFrame primatureUI = null;
     public boolean isLogged = false;
@@ -51,6 +51,7 @@ public class PrimatureUI extends JFrame {
             }
         });
         if ( new DataBase().connecter() ) {
+            gMinistèresUI = new JDesktopPane();
             connect();
             this.setSize(1020, 550);
             this.setLocationRelativeTo( null );
@@ -76,7 +77,9 @@ public class PrimatureUI extends JFrame {
     }
     
     private void deconnect() {
-        this.setVisible(false);
+        gMinistèresUI.removeAll();
+        gMinistèresUI.repaint();
+        this.dispose();
         LoginUI.trouver = "false";
         LoginUI.save = false;
         LoginUI.modify = false;
@@ -198,7 +201,6 @@ public class PrimatureUI extends JFrame {
         toolBar.setRollover(true);
         JLabel lblPrimature = new JLabel("PRIMATURE");
         toolBar.add(lblPrimature);
-
         JButton btnGMinistere = new JButton();
         btnGMinistere.setToolTipText("Gestion des Ministères");
         btnGMinistere.setIcon( new ImageIcon( "icons/parliament.png" )  );
@@ -250,27 +252,32 @@ public class PrimatureUI extends JFrame {
                 addPrintGProjets();
             }
         });
-        toolBar.add( btnGProjet );
         JButton btnPanelAdmin = new JButton();
+        if( LoginUI.trouver.equals("admin") ) {
+
+        toolBar.add( btnGProjet );
+//        JButton btnPanelAdmin = new JButton();
+//        btnPanelAdmin.setEnabled(false);
         btnPanelAdmin.setToolTipText("Administration Utilisateur");
         btnPanelAdmin.setIcon( new ImageIcon( "icons/administrative.png" )  );
         btnPanelAdmin.addActionListener( new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent arg0) {
-                gMinistèresUI.removeAll();
-                gMinistèresUI.repaint();
                 addAdminUI();
             }
         });
-        if( LoginUI.trouver.equals("admin") ) toolBar.add( btnPanelAdmin );
+            btnPanelAdmin.setEnabled(true);
+            toolBar.add( btnPanelAdmin );
+        } else btnPanelAdmin.setEnabled(false);
        return toolBar;
     }
     
     public void addAdminUI() {
-        AdminUI adminUI = new AdminUI();
-        adminUI.setBounds(0, 0, 200, 460);
-        adminUI.setVisible(true);
-        gMinistèresUI.add( adminUI );
+            AdminUI adminUI = new AdminUI();
+            adminUI.setBounds(0, 0, 200, 460);
+            adminUI.setVisible(true);
+        if( LoginUI.trouver.equals("admin") )
+            gMinistèresUI.add( adminUI );
     }
     
     public void addANewUserUI() {

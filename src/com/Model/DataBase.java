@@ -19,7 +19,7 @@ public class DataBase {
     private Connection connexion;
     private ResultSet resultSet;
     private PreparedStatement preparedStatement;
-    public int id;
+    private int id;
     
     public boolean connecter(){
         boolean connecter = false;
@@ -137,11 +137,9 @@ public class DataBase {
     
     public boolean save(HashMap<String, Object> req) {
         byte save = -1;
-        List<Map<String, Object>> rows = new ArrayList<>();
         try{
             if( connecter() ){
                 String sql = new String();
-                String actions;
                 List fieldsKey = new LinkedList();
                 List fieldsValue = new LinkedList();
                 if(req.containsKey("fields")){
@@ -170,12 +168,10 @@ public class DataBase {
                         cond.add( e.getKey() + " = ?" );
                     }
                     sql += String.join(" AND ", cond); 
-                    actions = "update";
                 }
                 else {
                    sql="INSERT INTO " + req.get("table") + " SET ";
                    if(req.containsKey("fields")) sql += String.join(",", fieldsKey);
-                   actions = "insert";
                 }
                 this.preparedStatement = this.connexion.prepareStatement( sql );
                 for (int i = 0; i < fieldsValue.size(); i++) {
@@ -190,5 +186,17 @@ public class DataBase {
             deconnecter();
             return save == 1;
         }
+    }
+    
+    public int getLastInsertId ( String table ) {
+        HashMap<String, Object> req = new HashMap<>();
+        req.put("table", table );
+        List<Map<String, Object>> list = this.find(req);
+        
+        int a = Integer.parseInt( list.get( list.size() ).get("id").toString() );
+        
+        System.err.println("lastInsertID " + a);
+     
+        return this.id; 
     }
 }

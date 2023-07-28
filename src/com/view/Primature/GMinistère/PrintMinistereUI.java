@@ -196,26 +196,32 @@ public class PrintMinistereUI extends JInternalFrame  {
     
     private void listMinistères(  List<Ministeres> listMinistères ){
         if ( LoginUI.search ) {
-            List<GestionFonds> listFonds = null;
-            listFonds = new GestionFonds_controleur().recherche(null, false);
-            if( listMinistères != null && listFonds != null ){
-                table = new Object[listMinistères.size()][10];
-                for(int i = 0; i < listMinistères.size(); i++){
-                    table[i][0] = listMinistères.get(i).getCode();
-                    table[i][1] = listMinistères.get(i).getNom();
-                    table[i][2] = listMinistères.get(i).getSigle();
-                    table[i][3] = listMinistères.get(i).getMinistreActuel();
-                    table[i][4] = listMinistères.get(i).getNoBRH();
-                    table[i][5] = listFonds.get(i).getMontantBRH();
-                    table[i][6] = listMinistères.get(i).getNoBNC();
-                    table[i][7] = listFonds.get(i).getMontantBNC();
-                    table[i][8] = listMinistères.get(i).getTelephone();
-                    table[i][9] = listMinistères.get(i).getAdresse().replace("_", " ");
-                }
-                Nrow = "Nonbre de ligne : " + listMinistères.size();
-                this.lblnbRow.setText(Nrow);
-                tableListe.setModel(new DefaultTableModel(table, TitileListMinistères ){});
-            } else JOptionPane.showMessageDialog(null, "Pas trouv\u00E9", "Not Found", JOptionPane.WARNING_MESSAGE, new ImageIcon("icons/warning_shield_64px.png") );
+            try {
+                List<GestionFonds> listFonds = null;
+                listFonds = new GestionFonds_controleur().recherche(null, false);
+                if( listMinistères != null ){
+                    table = new Object[listMinistères.size()][10];
+                    for(int i = 0; i < listMinistères.size(); i++){
+                        table[i][0] = listMinistères.get(i).getCode();
+                        table[i][1] = listMinistères.get(i).getNom();
+                        table[i][2] = listMinistères.get(i).getSigle();
+                        table[i][3] = listMinistères.get(i).getMinistreActuel();
+                        table[i][4] = listMinistères.get(i).getNoBRH();
+
+                        if(  listFonds != null ){
+                            table[i][5] = listFonds.get(i).getMontantBRH();
+                            table[i][7] = listFonds.get(i).getMontantBNC();
+                        }
+                        table[i][6] = listMinistères.get(i).getNoBNC();
+                        table[i][8] = listMinistères.get(i).getTelephone();
+                        table[i][9] = listMinistères.get(i).getAdresse().replace("_", " ");
+                    }
+                    Nrow = "Nonbre de ligne : " + listMinistères.size();
+                    this.lblnbRow.setText(Nrow);
+                    tableListe.setModel(new DefaultTableModel(table, TitileListMinistères ){});
+                } else JOptionPane.showMessageDialog(null, "Pas trouv\u00E9", "Not Found", JOptionPane.WARNING_MESSAGE, new ImageIcon("icons/warning_shield_64px.png") );
+            } catch (IndexOutOfBoundsException e) {}
+            
         }
     }
 

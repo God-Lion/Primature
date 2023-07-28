@@ -31,6 +31,7 @@ public class GestionMinisteres_controleur {
             conditions.put("code", ministeres.getCode());
             req.put("conditions", conditions);
         }
+        System.out.println("lastInsertID : " + db.getLastInsertId( this.table ) );
         return db.save(req);
     }
     
